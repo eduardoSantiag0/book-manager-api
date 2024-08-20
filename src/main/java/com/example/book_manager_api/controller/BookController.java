@@ -9,12 +9,17 @@ import com.example.book_manager_api.exceptions.BookPublicationYearInvalidExcepti
 import com.example.book_manager_api.exceptions.BookSingleRegistryException;
 import com.example.book_manager_api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,13 +55,8 @@ public class BookController {
 
     //? ResponseEntity represents the whole HTTP response: status code, headers, and body.
     @GetMapping
-    public ResponseEntity <List<BookDTO>> verLivros () {
-
-        List<BookDTO> livros = bookRepository.findAll().stream()
-                .map(b -> new BookDTO(b.getNomelivro(), b.getAutor(), b.getAnopublicacao(), b.getGenero()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(livros);
+    public ResponseEntity <Page<BookDTO>> verLivros (@PageableDefault(size=10,sort="nomelivro") Pageable pageable) {
+        return ResponseEntity.ok(bookService.listarTodos(pageable));
     }
 
     @GetMapping ("/{nomeLivro}")
@@ -90,6 +90,16 @@ public class BookController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping ("/random")
+    public ResponseEntity<BookDTO> getRandomSuggestion () {
+        Optional<BookDTO> randomBook = bookService.getRandomBook();
+        if (randomBook.isPresent()) {
+            return ResponseEntity.ok(randomBook.get());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 
