@@ -10,7 +10,6 @@ public interface  BookRepository extends JpaRepository <Book,Long> {
 
     Optional<Book> findBynomelivro(String nome);
 
-//    @Query("select b from livros order by RANDOM() LIMIT 1")
     @Query(value = "SELECT * FROM livros ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
     Optional<Book> findRandomBook();
 }

@@ -29,4 +29,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
     }
 
+    @ExceptionHandler(AuthorNameInvalidException.class)
+    private ResponseEntity<RestErrorMessage> authorNameInvalid (AuthorNameInvalidException exception) {
+        RestErrorMessage resp = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resp);
+    }
+
 }

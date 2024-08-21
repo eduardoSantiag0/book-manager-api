@@ -62,4 +62,11 @@ public class BookService {
     }
 
 
+    public boolean verificarNomeAutor(String autor) {
+        if (autor.matches("\\d+")) {
+            return true; // String is invalid if it only contains digits
+        }
+
+        return false;
+    }
 }
