@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
+
 @Table(name = "livros")
 @Entity(name = "Livro")
 @AllArgsConstructor
@@ -20,6 +22,7 @@ public class Book {
     private Long id;
 
     private String nomelivro;
+
     private String autor;
     private Integer anopublicacao;
     private Boolean disponivel;

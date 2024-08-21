@@ -4,13 +4,13 @@ import com.example.book_manager_api.domains.Book;
 import com.example.book_manager_api.domains.BookAtualizacaoDados;
 import com.example.book_manager_api.domains.BookDTO;
 import com.example.book_manager_api.domains.BookRepository;
+import com.example.book_manager_api.exceptions.AuthorNameInvalidException;
 import com.example.book_manager_api.exceptions.BookNotFoundException;
 import com.example.book_manager_api.exceptions.BookPublicationYearInvalidException;
 import com.example.book_manager_api.exceptions.BookSingleRegistryException;
 import com.example.book_manager_api.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.swing.text.html.Option;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping ("books")
@@ -45,6 +42,10 @@ public class BookController {
 
         if (bookService.verificacaoAnoPublicacao(bookDTO.anopublicacao())) {
             throw  new BookPublicationYearInvalidException("Ano de publicação está inválido");
+        }
+
+        if (bookService.verificarNomeAutor(bookDTO.autor())) {
+            throw new AuthorNameInvalidException("Nome do autor deve ser uma string");
         }
 
         var book = bookService.salvarRepositorio(bookDTO);

@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 public class BookManagerApiApplication {
 
 	public static void main(String[] args) {
+		System.out.println("COMEÇANDO...");
 		SpringApplication.run(BookManagerApiApplication.class, args);
 	}
 
