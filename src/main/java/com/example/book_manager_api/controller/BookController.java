@@ -9,10 +9,12 @@ import com.example.book_manager_api.exceptions.BookNotFoundException;
 import com.example.book_manager_api.exceptions.BookPublicationYearInvalidException;
 import com.example.book_manager_api.exceptions.BookSingleRegistryException;
 import com.example.book_manager_api.service.BookService;
+import com.example.book_manager_api.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +32,9 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
     @Transactional
@@ -83,7 +88,12 @@ public class BookController {
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity<Void> deletarLivro (@PathVariable Long id) {
+    public ResponseEntity<Void> deletarLivro (@PathVariable Long id, @RequestHeader("Authorization") String token) {
+
+        if (!tokenService.validarToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         var book = bookRepository.findById(id);
         if (book.isPresent()) {
             bookRepository.deleteById(id);
@@ -103,11 +113,17 @@ public class BookController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping ("/login")
+    public ResponseEntity login(@RequestBody String input) {
+        String token = tokenService.gerarToken(input);
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Password");
+        }
+
+        return ResponseEntity.ok(token);
+    }
+
+
 
 }
-
-
-
-
-
-

@@ -11,12 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-// Apenas um Cadastro de Livro
-// Método para salvar no repositório
-// Ano de Publicação deve ser menor ou igual que o ano atual
-//todo Paginação e Ordenação nas requisições GET
-//todo Verificação de cadastro ou atualização de livros
-
 @Service
 public class BookService {
 
