@@ -58,8 +58,9 @@ public class BookService {
 
     public boolean verificarNomeAutor(String autor) {
 
-        if (autor.matches(".*[\\d\\W].*")) {
-                return true;
+        if (autor.matches(".*[\\d\\W&&[^\\s]].*")) {
+
+            return true;
         }
 
         return false;
